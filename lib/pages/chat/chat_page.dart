@@ -20,6 +20,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 
@@ -28,13 +29,16 @@ class ChattingPage extends StatefulWidget {
   final String userEmail;
   final dynamic userId;
   final String userName;
-  const ChattingPage({required this.userEmail,super.key,required this.userId,required this.userName});
+  final String? userMobileNum;
+  const ChattingPage({required this.userEmail,this.userMobileNum,super.key,required this.userId,required this.userName});
 
   @override
   State<ChattingPage> createState() => _ChattingPageState();
 }
 
 class _ChattingPageState extends State<ChattingPage> {
+
+
   late final  chatController = Provider.of<MessageController>(context,listen: false);
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _messageController = TextEditingController();
@@ -215,8 +219,24 @@ class _ChattingPageState extends State<ChattingPage> {
             subtitle: Text(widget.userEmail, style:const TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
           )
         ),
-
         backgroundColor: const Color(0xFFF60205),
+
+        //App Bar Buttons
+        actions: [
+
+          Consumer<MessageController>(
+            builder: (context, value, child) =>  IconButton(onPressed: (){
+              value.closeChat(context,chatId: widget.userId);
+            }, icon: Icon(Icons.close)),
+          ),
+
+          //
+          if(widget.userMobileNum!=null)
+            IconButton(onPressed: (){
+              launch("tel:${widget.userMobileNum}");
+            }, icon: Icon(Icons.call)),
+
+        ],
       ),
       backgroundColor: Colors.white,
       body: Column(

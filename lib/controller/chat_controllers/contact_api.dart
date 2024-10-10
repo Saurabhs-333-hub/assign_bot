@@ -6,11 +6,14 @@ import 'package:assignbot/sharedpref/shared_pref.dart';
 import 'package:assignbot/sharedpref/user_pref_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class ContactApi extends GetxController{
 
   Rx<UserContactModel>? userContactModel;
 RxBool isLoading=false.obs;
+
+
   fetchContactApi() async{
 try {
   isLoading.value=false;
@@ -29,9 +32,10 @@ try {
     },
   );
 
-  
+  Logger().i("Message from contect Api\n${result.statusCode}\n${result.body}");
 
   var finalData = jsonDecode(result.body);
+
   // print(finalData);
   // if (finalData['success'] == true) {
 

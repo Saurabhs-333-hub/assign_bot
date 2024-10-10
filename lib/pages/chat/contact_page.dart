@@ -41,7 +41,7 @@ class _ContactPageState extends State<ContactPage> {
   void initState() {
     super.initState();
     final contactApi = Get.put(ContactApi()); // Use Get.find() to retrieve the instance
-    fetchContactsFuture = contactApi.fetchContactApi();
+    // fetchContactsFuture = contactApi.fetchContactApi();
 
   }
 
@@ -189,76 +189,66 @@ class RequestTile extends StatelessWidget {
 
 
 
-class RecentChatTab extends StatelessWidget {
+class RecentChatTab extends StatefulWidget {
   RecentChatTab({super.key});
 
+  @override
+  State<RecentChatTab> createState() => _RecentChatTabState();
+}
+
+class _RecentChatTabState extends State<RecentChatTab> {
   final contactApi = Get.put(ContactApi());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    contactApi.fetchContactApi();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: contactApi.fetchContactApi(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        itemCount: contactApi.userContactModel?.value.contacts.length??0,
+        itemBuilder: (context, index) {
+          final contact = contactApi.userContactModel?.value.contacts[index];
+          return Column(
+            children: [
+              ListTile(
+                onTap: () {
+                  _fetchMessageApi.fetchmessageapi(context,contact?.id??0);
+                  Get.to(ChattingPage(userEmail: contact?.email??"",userMobileNum: contact?.phone,userId: contact?.id, userName: contact?.name??"",));
+                },
 
-          // While the future is still loading
-          return  const Loader();
+                leading:CircleAvatar(
+                  backgroundColor: Colors.red.shade100,
+                  child:const  Icon(Icons.person,color: Colors.red, ),
+                ),
 
-        } else if (snapshot.hasError) {
-          // If the future completed with an error
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }else if( Get.find<ContactApi>().userContactModel?.value.contacts==null|| Get.find<ContactApi>().userContactModel!.value.contacts.isEmpty){
-          return const Center(child: Text("NO Contact Available"),);
-
-        }
-        else {
-          // If the future completed successfully
-          final contactApi = Get.find<ContactApi>();
-          final contacts = contactApi.userContactModel?.value.contacts ?? [];
-
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              itemCount: contacts.length,
-              itemBuilder: (context, index) {
-                final contact = contacts[index];
-                return Column(
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        _fetchMessageApi.fetchmessageapi(context,contact.id);
-                        Get.to(ChattingPage(userEmail: contact.email,userId: contact.id, userName: contact.name,));
-                      },
-
-                      leading:CircleAvatar(
-                        backgroundColor: Colors.red.shade100,
-                        child:const  Icon(Icons.person,color: Colors.red, ),
-                      ),
-
-                      // leading: Image.asset(people[index]['image']!),
-                      title: Text(
-                        contact.name ?? '',
-                        style: TextStyle(fontSize: SC.fromWidth(24)),
-                      ),
-                      subtitle: Text(
-                        contact.email ?? '',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(bottom: 18.0),
-                        child: Text(
-                          timeago.format(contact.maxCreatedAt ?? DateTime.now()),
-                          style: TextStyle(fontSize: SC.fromWidth(35)),
-                        ),
-                      ),
-                    ),
-                    // To separate each ListTile
-                  ],
-                );
-              },
-            ),
+                // leading: Image.asset(people[index]['image']!),
+                title: Text(
+                  contact?.name ?? '',
+                  style: TextStyle(fontSize: SC.fromWidth(24)),
+                ),
+                subtitle: Text(
+                  contact?.email ?? '',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(bottom: 18.0),
+                  child: Text(
+                    timeago.format(contact?.maxCreatedAt ?? DateTime.now()),
+                    style: TextStyle(fontSize: SC.fromWidth(35)),
+                  ),
+                ),
+              ),
+              // To separate each ListTile
+            ],
           );
-        }
-      },
+        },
+      ),
     );
   }
 }

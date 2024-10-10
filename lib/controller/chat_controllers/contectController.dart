@@ -23,7 +23,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
-class ContactController with ChangeNotifier
+class  ContactController with ChangeNotifier
 {
 
   List<Request> allRequest = [];
@@ -36,6 +36,8 @@ class ContactController with ChangeNotifier
         headers: {
       "Authorization": 'Bearer ${user.token}' ,
     });
+    // Logger().i("frome Request api \n${resp.statusCode}\n${resp.body}");
+    Logger().i("frome Request api \n${resp.statusCode}\n${resp.body}");
 
     if(resp.statusCode==401)
       {
@@ -141,5 +143,10 @@ class ContactController with ChangeNotifier
 
 
   }
+
+
+
+
+
 
 }

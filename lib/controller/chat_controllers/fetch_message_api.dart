@@ -5,6 +5,8 @@ import 'package:assignbot/models/message_list_model.dart';
 import 'package:assignbot/sharedpref/shared_pref.dart';
 import 'package:assignbot/sharedpref/user_pref_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart'as http;
 import 'package:logger/logger.dart';
@@ -136,6 +138,7 @@ class MessageController with ChangeNotifier
       },
     );
 
+    Logger().e("message\n${response.statusCode}\n${response.body }");
     if(response.statusCode ==401)
       {
         reDirect(context);
@@ -238,6 +241,56 @@ class MessageController with ChangeNotifier
     _messageListModel = null;
     _loading = true;
     notifyListeners();
+  }
+
+
+  //Close Chat
+  closeChat(BuildContext context,{required int chatId})
+  {
+
+    showDialog(context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+      title: Text("Close this chat${kDebugMode?"$chatId":""}"),
+      actions: [
+
+        ElevatedButton(onPressed: (){
+          Navigator.pop(context);
+        }, child: Text("Cancle")),
+        ElevatedButton(onPressed: ()async{
+
+          String uri = "https://chat.satyakabir.com/chatify/api/chat-history?id=$chatId";
+          var user = await UserPreference().getUser();
+          Map<String,String> head = {
+            "Authorization":"${user.token}"
+          };
+
+          var resp = await http.get(Uri.parse(uri),headers: head);
+          Logger().i("resp frome clos chat Api\n${user.token}\n${resp.statusCode}\n${resp.body}");
+
+          if(resp.statusCode==200)
+            {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Chat Close")));
+            }
+          else if(resp.statusCode==404)
+            {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Chat Not Found")));
+            }
+          else if(resp.statusCode==401&&kReleaseMode)
+            {
+              reDirect(context);
+            }
+          else
+            {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("Some Thing is wrong${kDebugMode?'\n${resp.statusCode}\n${resp.body}':''}")));
+            }
+
+
+        }, child: Text("Yes ")),
+
+      ],
+    ),);
   }
 
 }
