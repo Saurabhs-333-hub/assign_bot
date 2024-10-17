@@ -37,7 +37,7 @@ setListenerNotification(BuildContext context) async
     //This is Tap from forground
     onDidReceiveNotificationResponse: (message) async {
 
-
+      Logger().i("Tap On Notification");
       bool isUser =await UserPreference().checkUser() ;
       Logger().e("user Is $isUser");
       Logger().e("payLode ${message.payload}");
@@ -99,7 +99,13 @@ setListenerNotification(BuildContext context) async
               }),(r)=>false);
             }
     },
-    onDidReceiveBackgroundNotificationResponse: backgroundNotificationResponseHandler,
+    onDidReceiveBackgroundNotificationResponse:(NotificationResponse notification) async {
+      log('Tap On Notificastion Received background notification response: ${notification.payload}');
+      await NotificationService().showNotification(message: RemoteMessage(
+          data: {}
+      ), id: 5);
+    },
+
   );
 
   notificationService.getDeviceToken();
@@ -132,7 +138,7 @@ setListenerNotification(BuildContext context) async
 
 @pragma('vm:entry-point')
 backgroundNotificationResponseHandler(NotificationResponse notification) async {
-  log('Received background notification response: $notification');
+  log('Received background notification response: ${notification.payload}');
   await NotificationService().showNotification(message: RemoteMessage(
       data: {}
   ), id: 5);

@@ -139,6 +139,7 @@
 //
 
 import 'dart:async';
+import 'package:assignbot/Mohit/notification.dart';
 import 'package:assignbot/component/dimension.dart';
 import 'package:assignbot/controller/chat_controllers/contectController.dart';
 import 'package:assignbot/pages/chat/chat_page.dart';
@@ -148,9 +149,11 @@ import 'package:assignbot/pages/logout/logout_page.dart';
 import 'package:assignbot/pages/user/user_edit_profile.dart';
 import 'package:assignbot/pages/user/user_profile.dart';
 import 'package:assignbot/widgets/customBotomNavigationBar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 import '../models/contactRequestModel.dart';
@@ -230,6 +233,33 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> with Sing
         return false;
       },
       child: Scaffold(
+
+
+        floatingActionButton: kDebugMode?FloatingActionButton(onPressed: () async {
+          var d = await NotificationService().getDeviceToken();
+          print("  --($d)--");
+          
+
+
+
+          var notification_detail = NotificationDetails(
+            android: AndroidNotificationDetails(
+              sound: RawResourceAndroidNotificationSound('sound'),
+              playSound: true,
+              'channelId',
+              'channelName',
+              category: AndroidNotificationCategory.alarm,
+              importance: Importance.max,
+              fullScreenIntent: true,
+              priority: Priority.high,
+            ),
+
+          );
+
+          FlutterLocalNotificationsPlugin()
+              .show(0, "This Id Body", "sdfasdfd", await notification_detail);
+        }):null,
+
         body: PageTransitionSwitcher(
           duration:const Duration(milliseconds: 700),
           transitionBuilder: (Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {

@@ -216,7 +216,7 @@ class _ChattingPageState extends State<ChattingPage> {
           padding: const EdgeInsets.only(left: 38.0),
           child: ListTile(
             title: Text(widget.userName, style:const TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-            subtitle: Text(widget.userEmail, style:const TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
+            subtitle: Text(widget.userMobileNum??"", style:const TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
           )
         ),
         backgroundColor: const Color(0xFFF60205),

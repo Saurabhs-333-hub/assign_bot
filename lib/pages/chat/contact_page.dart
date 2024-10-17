@@ -89,12 +89,12 @@ class _ContactPageState extends State<ContactPage> {
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
 
-        title: Text("$serviceState"),
-        // title:const  Padding(
-        //   padding:  EdgeInsets.only(left: 28.0),
-        //   child: Text('Chats', style: TextStyle(fontWeight: FontWeight.w500)),
-        // ),
-        // backgroundColor: const Color(0xFFF60205),
+        // title: Text("$serviceState"),
+        title:const  Padding(
+          padding:  EdgeInsets.only(left: 28.0),
+          child: Text('Chats', style: TextStyle(fontWeight: FontWeight.w500)),
+        ),
+        // backgroundColor: const Color(0xFFF60205),ch
         backgroundColor: const Color(0xFFF60205),
       ),
       body: TabBarView(

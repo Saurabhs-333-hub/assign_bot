@@ -42,7 +42,7 @@ Future initializeService() async {
       autoStart: true,
       notificationChannelId: 'Satya_Kabir',
       initialNotificationTitle: 'Background Service',
-      initialNotificationContent: 'Initializing',
+      initialNotificationContent: 'App is running in background',
       foregroundServiceNotificationId: 1, // Use a non-zero value
     ),
   );

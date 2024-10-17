@@ -1,6 +1,9 @@
+import 'package:assignbot/Mohit/notification.dart';
 import 'package:assignbot/component/dimension.dart';
 import 'package:assignbot/pages/chat/chat_page.dart';
+import 'package:assignbot/sharedpref/shared_pref.dart';
 import 'package:assignbot/widgets/selectable_container.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -16,6 +19,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // floatingActionButton: kDebugMode?FloatingActionButton(onPressed: () async {
+      //   var d = await NotificationService().getDeviceToken();
+      //   print(d);
+      // }):null,
+
 
       backgroundColor: Colors.white,
 

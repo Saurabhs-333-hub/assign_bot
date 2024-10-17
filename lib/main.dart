@@ -26,11 +26,23 @@ final navigatorKey = GlobalKey<NavigatorState>();
 // Define the top-level function for handling background messages
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  Logger().e("bacgroubn Notification is Receved");
+  Logger().e("bacgroubn Notification is Receved ${message.data}");
   await Firebase.initializeApp();
+
+
+  AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings("@mipmap/launcher_icon");
+
+  InitializationSettings initializationSettings = InitializationSettings(
+      android: androidInitializationSettings
+  );
+
+  await FlutterLocalNotificationsPlugin().initialize(initializationSettings);
+
   AndroidNotificationDetails androidNotificationDetails =
   AndroidNotificationDetails("full_screen_intent", "hggfgfgdfgdfgdfdf",
       importance: Importance.max,
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound('sound'),
       category: AndroidNotificationCategory.alarm,
       priority: Priority.high,
       fullScreenIntent: true);
@@ -38,11 +50,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final platformNoitifcationPlugin =
   NotificationDetails(android: androidNotificationDetails);
 
-  await FlutterLocalNotificationsPlugin()
-      .show(0, "This Id Body", "sdfasdfd", platformNoitifcationPlugin);
+  // await FlutterLocalNotificationsPlugin()
+  //     .show(0, "This Id Body", "sdfasdfd", platformNoitifcationPlugin,payload: );
 
   //
-  // await NotificationService().showNotification(message: message, id: 0);
+
+  Logger().i("backGround notification receved\nPaylode : - \n${message.data}");
+
+  await NotificationService().showNotification(message: message, id: 0);
 }
 
 void main() async {
